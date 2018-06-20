@@ -1,0 +1,268 @@
+#---------------------------------------------------------------------------------
+.SUFFIXES:
+#---------------------------------------------------------------------------------
+
+ifeq ($(strip $(DEVKITARM)),)
+$(error "Please set DEVKITARM in your environment. export DEVKITARM=<path to>devkitARM")
+endif
+
+TOPDIR ?= $(CURDIR)
+include $(DEVKITARM)/3ds_rules
+
+#---------------------------------------------------------------------------------
+# TARGET is the name of the output
+# BUILD is the directory where object files & intermediate files will be placed
+# SOURCES is a list of directories containing source code
+# DATA is a list of directories containing data files
+# INCLUDES is a list of directories containing header files
+#
+# NO_SMDH: if set to anything, no SMDH file is generated.
+# ROMFS is the directory which contains the RomFS, relative to the Makefile (Optional)
+# APP_TITLE is the name of the app stored in the SMDH file (Optional)
+# APP_DESCRIPTION is the description of the app stored in the SMDH file (Optional)
+# APP_AUTHOR is the author of the app stored in the SMDH file (Optional)
+# ICON is the filename of the icon (.png), relative to the project folder.
+#   If not set, it attempts to use one of the following (in this order):
+#     - <Project name>.png
+#     - icon.png
+#     - <libctru folder>/default_icon.png
+#---------------------------------------------------------------------------------
+TARGET		:=	$(notdir $(CURDIR))
+BUILD		:=	build
+#DATA		:=	data
+INCLUDES	:=	src
+ROMFS		:=	src/3ds/romfs
+
+APP_TITLE=atari800
+APP_DESCRIPTION=\"Atari 8-bit computer emulator (0.2.4)\"
+APP_AUTHOR=\"atari800 development team\"
+ICON = src/3ds/banner/atari800-icon.png
+
+#	src/af80.c \
+#	src/bit3.c \
+#	src/pbi_proto80.c \
+#	src/pbi_bb.c \
+#	src/pbi_mio.c \
+#	src/pbi_xld.c \
+#	src/xep80.c \
+#	src/xep80_fonts.c \
+#	src/atari_ntsc/atari_ntsc.c \
+#	src/filter_ntsc.c \
+
+GRAPHICS =
+
+SOURCES = \
+	src/afile.c \
+	src/antic.c \
+	src/artifact.c \
+	src/atari.c \
+	src/binload.c \
+	src/cartridge.c \
+	src/cassette.c \
+	src/compfile.c \
+	src/cfg.c \
+	src/colours.c \
+	src/colours_external.c \
+	src/colours_ntsc.c \
+	src/colours_pal.c \
+	src/cpu.c \
+	src/crc32.c \
+	src/cycle_map.c \
+	src/devices.c \
+	src/emuos.c \
+	src/esc.c \
+	src/gtia.c \
+	src/ide.c \
+	src/img_tape.c \
+	src/input.c \
+	src/log.c \
+	src/memory.c \
+	src/monitor.c \
+	src/mzpokeysnd.c \
+	src/pal_blending.c \
+	src/pbi.c \
+	src/pbi_scsi.c \
+	src/pia.c \
+	src/pokey.c \
+	src/pokeysnd.c \
+	src/rdevice.c \
+	src/remez.c \
+	src/rtime.c \
+	src/screen.c \
+	src/sio.c \
+	src/sndsave.c \
+	src/sound.c \
+	src/statesav.c \
+	src/sysrom.c \
+	src/ui.c \
+	src/ui_basic.c \
+	src/util.c \
+	src/videomode.c \
+	src/voicebox.c \
+	src/votrax.c \
+	src/votraxsnd.c \
+	src/roms/altirra_5200_os.c \
+	src/roms/altirra_basic.c \
+	src/roms/altirraos_800.c \
+	src/roms/altirraos_xl.c \
+	src/3ds/grapefruit.c \
+	src/3ds/input.c \
+	src/3ds/main.c \
+	src/3ds/sound_ndsp.c \
+	src/3ds/video.c
+
+SHADERS = \
+	src/3ds/shader.v.pica
+
+#---------------------------------------------------------------------------------
+# options for code generation
+#---------------------------------------------------------------------------------
+ARCH	:=	-march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft
+
+CFLAGS	:=	-g -Wall -O2 -mword-relocations -D_GNU_SOURCE \
+			-fomit-frame-pointer -ffunction-sections \
+			$(ARCH)
+
+CFLAGS	+=	$(INCLUDE) -DARM11 -D_3DS
+
+CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
+
+ASFLAGS	:=	-g $(ARCH)
+LDFLAGS	=	-specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
+
+LIBS := -lpng -lz -lcitro3d -lctru -lm
+
+#---------------------------------------------------------------------------------
+# list of directories containing libraries, this must be the top level containing
+# include and lib
+#---------------------------------------------------------------------------------
+LIBDIRS	:= $(CTRULIB) $(DEVKITPRO)/portlibs/3ds $(DEVKITPRO)/portlibs/armv6k
+
+
+#---------------------------------------------------------------------------------
+# no real need to edit anything past this point unless you need to add additional
+# rules for different file extensions
+#---------------------------------------------------------------------------------
+ifneq ($(BUILD),$(notdir $(CURDIR)))
+#---------------------------------------------------------------------------------
+
+export OUTPUT	:=	$(CURDIR)/$(TARGET)
+export TOPDIR	:=	$(CURDIR)
+
+export VPATH	:=	$(CURDIR)
+
+export DEPSDIR	:=	
+
+CFILES		:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir))
+PICAFILES	:=	$(foreach dir,$(SHADERS),$(CURDIR)/$(dir))
+PNGFILES	:=	$(foreach dir,$(GRAPHICS),$(CURDIR)/$(dir))
+
+export LD	:=	$(CC)
+export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
+			$(PNGFILES:.png=.bin.o) \
+			$(PICAFILES:.v.pica=.shbin.o) $(SHLISTFILES:.shlist=.shbin.o) \
+			$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
+
+
+export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
+			$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
+			-I$(CURDIR)/$(BUILD) \
+			-I$(CURDIR)/src/3ds
+
+export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
+
+ifeq ($(strip $(ICON)),)
+	icons := $(wildcard *.png)
+	ifneq (,$(findstring $(TARGET).png,$(icons)))
+		export APP_ICON := $(TOPDIR)/$(TARGET).png
+	else
+		ifneq (,$(findstring icon.png,$(icons)))
+			export APP_ICON := $(TOPDIR)/icon.png
+		endif
+	endif
+else
+	export APP_ICON := $(TOPDIR)/$(ICON)
+endif
+
+ifeq ($(strip $(NO_SMDH)),)
+	export _3DSXFLAGS += --smdh=$(CURDIR)/$(TARGET).smdh
+endif
+
+ifneq ($(ROMFS),)
+	export _3DSXFLAGS += --romfs=$(CURDIR)/$(ROMFS)
+endif
+
+.PHONY: $(BUILD) clean all
+
+#---------------------------------------------------------------------------------
+all: $(BUILD)
+
+$(BUILD):
+	@[ -d $@ ] || mkdir -p $@
+	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile.3ds
+
+#---------------------------------------------------------------------------------
+clean:
+	@echo clean ...
+	@rm -fr $(BUILD) $(TARGET).3dsx $(OUTPUT).smdh $(TARGET).elf
+
+
+#---------------------------------------------------------------------------------
+else
+
+DEPENDS	:=	$(OFILES:.o=.d)
+
+#---------------------------------------------------------------------------------
+# main targets
+#---------------------------------------------------------------------------------
+ifeq ($(strip $(NO_SMDH)),)
+$(OUTPUT).3dsx	:	$(OUTPUT).elf $(OUTPUT).smdh
+else
+$(OUTPUT).3dsx	:	$(OUTPUT).elf
+endif
+
+$(OUTPUT).elf	:	$(OFILES)
+
+#---------------------------------------------------------------------------------
+# you need a rule like this for each extension you use as binary data
+#---------------------------------------------------------------------------------
+%.bin.o	:	%.bin
+#---------------------------------------------------------------------------------
+	@echo $(notdir $<)
+	@$(bin2o)
+
+#---------------------------------------------------------------------------------
+%.bin: %.png
+#---------------------------------------------------------------------------------
+	@echo $(notdir $<)
+	@convert $< rgba:$@
+
+#---------------------------------------------------------------------------------
+# rules for assembling GPU shaders
+#---------------------------------------------------------------------------------
+define shader-as
+	$(eval CURBIN := $(patsubst %.shbin.o,%.shbin,$(notdir $@)))
+	picasso -o $(CURBIN) $1
+	bin2s $(CURBIN) | $(AS) -o $@
+	echo "extern const u8" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`"_end[];" > `(echo $(CURBIN) | tr . _)`.h
+	echo "extern const u8" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`"[];" >> `(echo $(CURBIN) | tr . _)`.h
+	echo "extern const u32" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`_size";" >> `(echo $(CURBIN) | tr . _)`.h
+endef
+
+%.shbin.o : %.v.pica %.g.pica
+	@echo $(notdir $^)
+	@$(call shader-as,$^)
+
+%.shbin.o : %.v.pica
+	@echo $(notdir $<)
+	@$(call shader-as,$<)
+
+%.shbin.o : %.shlist
+	@echo $(notdir $<)
+	@$(call shader-as,$(foreach file,$(shell cat $<),$(dir $<)/$(file)))
+
+-include $(DEPENDS)
+
+#---------------------------------------------------------------------------------------
+endif
+#---------------------------------------------------------------------------------------

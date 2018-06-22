@@ -159,8 +159,8 @@ void N3DS_InitVideo(void)
 
 	target_top = C3D_RenderTargetCreate(240, 400, GPU_RB_RGB8, GPU_RB_DEPTH16);
 	target_bottom = C3D_RenderTargetCreate(240, 320, GPU_RB_RGB8, GPU_RB_DEPTH16);
-	C3D_RenderTargetSetClear(target_top, C3D_CLEAR_ALL, 0, 0);
-	C3D_RenderTargetSetClear(target_bottom, C3D_CLEAR_ALL, 0, 0);
+	C3D_RenderTargetClear(target_top, C3D_CLEAR_ALL, 0, 0);
+	C3D_RenderTargetClear(target_bottom, C3D_CLEAR_ALL, 0, 0);
 	C3D_RenderTargetSetOutput(target_top, GFX_TOP, GFX_LEFT,
 		GX_TRANSFER_IN_FORMAT(GX_TRANSFER_FMT_RGB8) | GX_TRANSFER_OUT_FORMAT(GX_TRANSFER_FMT_RGB8));
 	C3D_RenderTargetSetOutput(target_bottom, GFX_BOTTOM, GFX_LEFT,
@@ -185,7 +185,8 @@ void N3DS_InitVideo(void)
 
 	texEnv = C3D_GetTexEnv(0);
 	C3D_TexEnvSrc(texEnv, C3D_Both, GPU_TEXTURE0, 0, 0);
-	C3D_TexEnvOp(texEnv, C3D_Both, 0, 0, 0);
+	C3D_TexEnvOpRgb(texEnv, 0, 0, 0);
+	C3D_TexEnvOpAlpha(texEnv, 0, 0, 0);
 	C3D_TexEnvFunc(texEnv, C3D_Both, GPU_MODULATE);
 
 	C3D_DepthTest(true, GPU_GEQUAL, GPU_WRITE_ALL);
@@ -336,12 +337,11 @@ void PLATFORM_DisplayScreen(void)
 	GSPGPU_FlushDataCache(dest, 512 * 256 * 4);
 #else
 	GSPGPU_FlushDataCache(texBuf, 512 * 256 * 4);
-	C3D_SafeDisplayTransfer(texBuf, GX_BUFFER_DIM(512, 256), tex.data, GX_BUFFER_DIM(tex.width, tex.height),
+	C3D_SyncDisplayTransfer(texBuf, GX_BUFFER_DIM(512, 256), tex.data, GX_BUFFER_DIM(tex.width, tex.height),
 		(GX_TRANSFER_FLIP_VERT(1) | GX_TRANSFER_OUT_TILED(1) | GX_TRANSFER_RAW_COPY(0) |
 		GX_TRANSFER_IN_FORMAT(GX_TRANSFER_FMT_RGBA8) | GX_TRANSFER_OUT_FORMAT(GX_TRANSFER_FMT_RGBA8) |
 		GX_TRANSFER_SCALING(GX_TRANSFER_SCALE_NO))
 	);
-	gspWaitForPPF();
 
 	if (!C3D_FrameBegin(0))
 		return;

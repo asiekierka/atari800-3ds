@@ -549,7 +549,7 @@
 /* #undef WORDS_BIGENDIAN */
 
 /* Define if unaligned word access is ok. */
-#define WORDS_UNALIGNED_OK 1
+/* #undef WORDS_UNALIGNED_OK */
 
 /* Target: Standard X11. */
 /* #undef X11 */

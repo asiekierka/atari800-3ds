@@ -1,5 +1,6 @@
 #include "grapefruit.h"
 #include <png.h>
+#include <stdlib.h>
 
 static u32 next_power_of_two(u32 v) {
 	v--;
@@ -80,13 +81,11 @@ bool ctr_load_png(C3D_Tex* tex, const char* name, texture_location loc)
 
   GSPGPU_FlushDataCache(data, tex->width * tex->height * data_bpp);
 
-  C3D_SafeDisplayTransfer(data, GX_BUFFER_DIM(tex->width, tex->height),
+  C3D_SyncDisplayTransfer(data, GX_BUFFER_DIM(tex->width, tex->height),
     tex->data, GX_BUFFER_DIM(tex->width, tex->height),
     GX_TRANSFER_FLIP_VERT(1) | GX_TRANSFER_OUT_TILED(1) | GX_TRANSFER_RAW_COPY(0) |
     GX_TRANSFER_IN_FORMAT(data_format) | GX_TRANSFER_OUT_FORMAT(data_format)
     | GX_TRANSFER_SCALING(GX_TRANSFER_SCALE_NO));
-
-  gspWaitForPPF();
 
   linearFree(data);
   free(png_rows);

@@ -119,7 +119,7 @@ SHADERS = \
 #---------------------------------------------------------------------------------
 ARCH	:=	-march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft
 
-CFLAGS	:=	-g -Wall -O2 -mword-relocations -D_GNU_SOURCE \
+CFLAGS	:=	-g -Wall -O2 -flto -mword-relocations -D_GNU_SOURCE \
 			-fomit-frame-pointer -ffunction-sections \
 			$(ARCH)
 

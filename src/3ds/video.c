@@ -237,6 +237,8 @@ void PLATFORM_SetVideoMode(VIDEOMODE_resolution_t const *res, int windowed, VIDE
 {
 	N3DS_VIDEO_mode = mode;
 
+	C3D_RenderTargetClear(target_top, C3D_CLEAR_ALL, 0, 0);
+
 	PLATFORM_PaletteUpdate();
 	PLATFORM_DisplayScreen();
 }
@@ -317,10 +319,10 @@ void PLATFORM_DisplayScreen(void)
 	if (N3DS_VIDEO_mode == VIDEOMODE_MODE_NORMAL && ARTIFACT_mode == ARTIFACT_PAL_BLEND)
 	{
 #ifdef SOFTWARE_INTERLAVE
-		PAL_BLENDING_Blit32(texBuf, src, Screen_WIDTH, VIDEOMODE_src_width, VIDEOMODE_src_height, VIDEOMODE_src_offset_top % 2);
+		PAL_BLENDING_Blit32((ULONG*) texBuf, src, Screen_WIDTH, VIDEOMODE_src_width, VIDEOMODE_src_height, VIDEOMODE_src_offset_top % 2);
 		N3DS_RenderMorton32to32(texBuf, dest, Screen_WIDTH, VIDEOMODE_src_width, VIDEOMODE_src_height);
 #else
-		PAL_BLENDING_Blit32(texBuf, src, tex.width, VIDEOMODE_src_width, VIDEOMODE_src_height, VIDEOMODE_src_offset_top % 2);
+		PAL_BLENDING_Blit32((ULONG*) texBuf, src, tex.width, VIDEOMODE_src_width, VIDEOMODE_src_height, VIDEOMODE_src_offset_top % 2);
 #endif
 	}
 	else

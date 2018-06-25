@@ -172,7 +172,7 @@
 #define HAVE_MODF 1
 
 /* Define to 1 if you have the `nanosleep' function. */
-/* #undef HAVE_NANOSLEEP */
+#define HAVE_NANOSLEEP 1 /* Since devkitARM r49 */
 
 /* Define to 1 if you have the <ndir.h> header file, and it defines `DIR'. */
 /* #undef HAVE_NDIR_H */
@@ -401,7 +401,7 @@
 #define PACKAGE_NAME "Atari800"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Atari800 3.1.0"
+#define PACKAGE_STRING "Atari800 git (2018-06-22)"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "atari800"
@@ -410,7 +410,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "3.1.0"
+#define PACKAGE_VERSION "3ds 0.3.1"
 
 /* Define to use page-based attribute array. */
 #define PAGED_ATTRIB 1

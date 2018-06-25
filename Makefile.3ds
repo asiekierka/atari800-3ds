@@ -34,7 +34,7 @@ INCLUDES	:=	src
 ROMFS		:=	src/3ds/romfs
 
 APP_TITLE=atari800
-APP_DESCRIPTION=\"Atari 8-bit computer emulator (0.3.0)\"
+APP_DESCRIPTION=\"Atari 8-bit computer emulator (0.3.1)\"
 APP_AUTHOR=\"atari800 development team\"
 ICON = src/3ds/banner/atari800-icon.png
 
@@ -119,7 +119,7 @@ SHADERS = \
 #---------------------------------------------------------------------------------
 ARCH	:=	-march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft
 
-CFLAGS	:=	-g -Wall -O2 -flto -mword-relocations -D_GNU_SOURCE \
+CFLAGS	:=	-g -Wall -O2 -mword-relocations -D_GNU_SOURCE \
 			-fomit-frame-pointer -ffunction-sections \
 			$(ARCH)
 

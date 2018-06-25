@@ -325,7 +325,8 @@ char *Util_strdup(const char *s)
 
 void Util_splitpath(const char *path, char *dir_part, char *file_part)
 {
-	const char *p;
+	const char *p, *p_check;
+	int matched;
 	/* find the last Util_DIR_SEP_CHAR except the last character */
 	for (p = path + strlen(path) - 2; p >= path; p--) {
 		if (*p == Util_DIR_SEP_CHAR
@@ -336,9 +337,19 @@ void Util_splitpath(const char *path, char *dir_part, char *file_part)
 		   ) {
 			if (dir_part != NULL) {
 				int len = p - path;
-				if (p == path || (p == path + 2 && path[1] == ':'))
-					/* root dir: include Util_DIR_SEP_CHAR in dir_part */
+				/* check for root dir and include Util_DIR_SEP_CHAR if so */
+				if (p == path) /* detects "/" */
 					len++;
+				else if (*(p - 1) == ':') { /* detects "...:/", but not if another separator exists */
+					matched = 1;
+					for (p_check = (p - 2); p_check >= path; p_check--)
+						if (*p_check == Util_DIR_SEP_CHAR) {
+							matched = 0;
+							break;
+						}
+					if (matched)
+						len++;
+				}
 				memcpy(dir_part, path, len);
 				dir_part[len] = '\0';
 			}

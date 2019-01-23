@@ -37,6 +37,8 @@
 /* Define to disable bitmap graphics emulation in CURSES target. */
 /* #undef CURSES_BASIC */
 
+#define CYCLES_PER_OPCODE 1
+
 /* Alternate config filename due to 8+3 fs limit. */
 #define DEFAULT_CFG_NAME "/3ds/atari800/atari800.cfg"
 

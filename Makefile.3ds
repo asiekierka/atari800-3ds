@@ -69,7 +69,6 @@ SOURCES = \
 	src/crc32.c \
 	src/cycle_map.c \
 	src/devices.c \
-	src/emuos.c \
 	src/esc.c \
 	src/gtia.c \
 	src/ide.c \

@@ -51,6 +51,9 @@ static u32 *texBuf;
 VIDEOMODE_MODE_t N3DS_VIDEO_mode;
 static int ctable[256];
 
+static bool vsync_active = false;
+static u32 vsync_counter;
+
 void N3DS_VIDEO_PaletteUpdate()
 {
 	int i;
@@ -93,7 +96,7 @@ void N3DS_InitVideo(void)
 	C3D_RenderTargetSetOutput(target_bottom, GFX_BOTTOM, GFX_LEFT,
 		GX_TRANSFER_IN_FORMAT(GX_TRANSFER_FMT_RGB8) | GX_TRANSFER_OUT_FORMAT(GX_TRANSFER_FMT_RGB8));
 
-	C3D_TexInit(&tex, 512, 256, GPU_RGBA8);
+	C3D_TexInitVRAM(&tex, 512, 256, GPU_RGBA8);
 	texBuf = linearAlloc(512 * 256 * 4);
 
 	ctr_load_png(&kbd_display, "romfs:/kbd_display.png", TEXTURE_TARGET_VRAM);
@@ -246,11 +249,22 @@ void PLATFORM_DisplayScreen(void)
 		GX_TRANSFER_IN_FORMAT(GX_TRANSFER_FMT_RGBA8) | GX_TRANSFER_OUT_FORMAT(GX_TRANSFER_FMT_RGBA8) |
 		GX_TRANSFER_SCALING(GX_TRANSFER_SCALE_NO))
 	);
-
-	if (!C3D_FrameBegin(0))
-		return;
-
 	GSPGPU_FlushDataCache(tex.data, 512 * 256 * 4);
+
+	if (vsync_active) {
+		u32 curr_frame = C3D_FrameCounter(0);
+		if (curr_frame > vsync_counter) {
+			// ticking took >1 frame's worth
+			C3D_FrameBegin(0);
+			vsync_counter = curr_frame;
+		} else {
+			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
+			vsync_counter = C3D_FrameCounter(0);
+		}
+	} else {
+		if (!C3D_FrameBegin(0))
+			return;
+	}
 
 	C3D_FrameDrawOn(target_bottom);
 	C3D_FVUnifMtx4x4(GPU_VERTEX_SHADER, shader.proj_loc, &proj_bottom);
@@ -285,4 +299,13 @@ void PLATFORM_DisplayScreen(void)
 	C3D_ImmDrawEnd();
 
 	C3D_FrameEnd(0);
+}
+
+void N3DS_ToggleVsync(void) {
+	vsync_active = !vsync_active;
+	vsync_counter = 0;
+}
+
+bool N3DS_IsVsyncEnabled(void) {
+	return vsync_active;
 }

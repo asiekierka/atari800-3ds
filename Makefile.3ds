@@ -58,6 +58,7 @@ SOURCES = \
 	src/atari.c \
 	src/binload.c \
 	src/cartridge.c \
+	src/cartridge_info.c \
 	src/cassette.c \
 	src/compfile.c \
 	src/cfg.c \

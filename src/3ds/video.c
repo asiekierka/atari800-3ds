@@ -256,10 +256,8 @@ void PLATFORM_DisplayScreen(void)
 		if (curr_frame > vsync_counter) {
 			// ticking took >1 frame's worth
 			C3D_FrameBegin(0);
-			vsync_counter = curr_frame;
 		} else {
 			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-			vsync_counter = C3D_FrameCounter(0);
 		}
 	} else {
 		if (!C3D_FrameBegin(0))
@@ -299,6 +297,8 @@ void PLATFORM_DisplayScreen(void)
 	C3D_ImmDrawEnd();
 
 	C3D_FrameEnd(0);
+
+	vsync_counter = C3D_FrameCounter(0);
 }
 
 void N3DS_ToggleVsync(void) {

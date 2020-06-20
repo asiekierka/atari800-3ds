@@ -38,6 +38,7 @@
 #ifdef SOUND
 #include "../sound.h"
 #endif
+#include "util.h"
 #include "video.h"
 #include "videomode.h"
 
@@ -52,12 +53,21 @@ int PLATFORM_Configure(char *option, char *parameters)
 		sscanf(parameters, "%d", &dpad_as_keyboard);
 		return 1;
 	}
+	else if (strcmp(option, "N3DS_VSYNC") == 0)
+	{
+		int val = Util_sscanbool(parameters);
+		if ((val > 0 && !N3DS_IsVsyncEnabled()) || (val == 0 && N3DS_IsVsyncEnabled())) {
+			N3DS_ToggleVsync();
+		}
+		return 1;
+	}
 	return 0;
 }
 
 void PLATFORM_ConfigSave(FILE *fp)
 {
 	fprintf(fp, "N3DS_DPAD_MODE=%d\n", dpad_as_keyboard);
+	fprintf(fp, "N3DS_VSYNC=%d\n", N3DS_IsVsyncEnabled());
 }
 
 int PLATFORM_Initialise(int *argc, char *argv[])
@@ -74,7 +84,8 @@ void PLATFORM_Sleep(double s)
 
 double PLATFORM_Time(void)
 {
-	return osGetTime() * 1e-3;
+	// return osGetTime() * 1e-3;
+	return svcGetSystemTick() * (1.0 / SYSCLOCK_ARM11);
 }
 
 int PLATFORM_Exit(int run_monitor)
@@ -85,8 +96,6 @@ int PLATFORM_Exit(int run_monitor)
 		return 1;
 	} else {
 		N3DS_ExitVideo();
-
-		acExit();
 
 		ptmSysmExit();
 		romfsExit();
@@ -101,9 +110,6 @@ int main(int argc, char **argv)
 
 	ptmSysmInit();
 	osSetSpeedupEnable(1);
-	APT_SetAppCpuTimeLimit(80);
-
-	acInit();
 
 	// set config defaults
 	PLATFORM_IsNew3DS = PTMSYSM_CheckNew3DS();

@@ -403,7 +403,7 @@
 #define PACKAGE_NAME "Atari800"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Atari800 git (2018-06-22)"
+#define PACKAGE_STRING "Atari800 git (2020-08-17)"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "atari800"
@@ -412,7 +412,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "3ds 0.3.1"
+#define PACKAGE_VERSION "3ds 0.3.3"
 
 /* Define to use page-based attribute array. */
 #define PAGED_ATTRIB 1

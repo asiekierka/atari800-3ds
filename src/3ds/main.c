@@ -56,9 +56,7 @@ int PLATFORM_Configure(char *option, char *parameters)
 	else if (strcmp(option, "N3DS_VSYNC") == 0)
 	{
 		int val = Util_sscanbool(parameters);
-		if ((val > 0 && !N3DS_IsVsyncEnabled()) || (val == 0 && N3DS_IsVsyncEnabled())) {
-			N3DS_ToggleVsync();
-		}
+		N3DS_SetVsync(val > 0);
 		return 1;
 	}
 	return 0;
@@ -84,7 +82,6 @@ void PLATFORM_Sleep(double s)
 
 double PLATFORM_Time(void)
 {
-	// return osGetTime() * 1e-3;
 	return svcGetSystemTick() * (1.0 / SYSCLOCK_ARM11);
 }
 
@@ -97,7 +94,6 @@ int PLATFORM_Exit(int run_monitor)
 	} else {
 		N3DS_ExitVideo();
 
-		ptmSysmExit();
 		romfsExit();
 	}
 
@@ -108,11 +104,10 @@ int main(int argc, char **argv)
 {
 	romfsInit();
 
-	ptmSysmInit();
 	osSetSpeedupEnable(1);
 
 	// set config defaults
-	PLATFORM_IsNew3DS = PTMSYSM_CheckNew3DS();
+	APT_CheckNew3DS(&PLATFORM_IsNew3DS);
 	POKEYSND_enable_new_pokey = PLATFORM_IsNew3DS;
 
 	N3DS_InitVideo();

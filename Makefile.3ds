@@ -205,6 +205,7 @@ $(BUILD):
 clean:
 	@echo clean ...
 	@rm -fr $(BUILD) $(TARGET).3dsx $(OUTPUT).smdh $(TARGET).elf
+	@rm -fr src/*.d src/*.o src/3ds/*.d src/3ds/*.o
 
 
 #---------------------------------------------------------------------------------

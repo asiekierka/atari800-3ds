@@ -229,6 +229,9 @@ void PLATFORM_DisplayScreen(void)
 	u8 *src;
 	float xmin, ymin, xmax, ymax, txmin, tymin, txmax, tymax;
 
+	if (!gspHasGpuRight())
+		return;
+
 	src = (u8*) Screen_atari;
 	src += Screen_WIDTH * VIDEOMODE_src_offset_top + VIDEOMODE_src_offset_left;
 
@@ -249,7 +252,6 @@ void PLATFORM_DisplayScreen(void)
 		GX_TRANSFER_IN_FORMAT(GX_TRANSFER_FMT_RGBA8) | GX_TRANSFER_OUT_FORMAT(GX_TRANSFER_FMT_RGBA8) |
 		GX_TRANSFER_SCALING(GX_TRANSFER_SCALE_NO))
 	);
-	GSPGPU_FlushDataCache(tex.data, 512 * 256 * 4);
 
 	if (vsync_active) {
 		u32 curr_frame = C3D_FrameCounter(0);
@@ -260,8 +262,7 @@ void PLATFORM_DisplayScreen(void)
 			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 		}
 	} else {
-		if (!C3D_FrameBegin(0))
-			return;
+		C3D_FrameBegin(0);
 	}
 
 	C3D_FrameDrawOn(target_bottom);
@@ -301,9 +302,13 @@ void PLATFORM_DisplayScreen(void)
 	vsync_counter = C3D_FrameCounter(0);
 }
 
-void N3DS_ToggleVsync(void) {
-	vsync_active = !vsync_active;
+void N3DS_SetVsync(bool value) {
+	vsync_active = value;
 	vsync_counter = 0;
+}
+
+void N3DS_ToggleVsync(void) {
+	N3DS_SetVsync(!vsync_active);
 }
 
 bool N3DS_IsVsyncEnabled(void) {

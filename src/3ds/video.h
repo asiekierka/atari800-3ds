@@ -14,6 +14,7 @@ void N3DS_ExitVideo(void);
 void N3DS_DrawTexture(C3D_Tex* tex, int x, int y, int tx, int ty, int width, int height);
 
 void N3DS_ToggleVsync(void);
+void N3DS_SetVsync(bool value);
 bool N3DS_IsVsyncEnabled(void);
 
 #endif /* _3DS_VIDEO_H_ */

@@ -51,8 +51,46 @@ static u32 *texBuf;
 VIDEOMODE_MODE_t N3DS_VIDEO_mode;
 static int ctable[256];
 
-static bool vsync_active = false;
+static bool vsync_active = true;
 static u32 vsync_counter;
+
+static aptHookCookie apt_cookie;
+
+static void set_refresh_rate(u32 h_total) {
+	GSPGPU_WriteHWRegs(0x400424, &h_total, 4);
+}
+
+static void restore_refresh_rate(void) {
+	// restore refresh rate
+	set_refresh_rate(413);
+}
+
+void N3DS_SetVsync(bool value) {
+	vsync_active = value;
+	vsync_counter = 0;
+
+	// 50Hz mode
+	u32 h_total = (Atari800_tv_mode == Atari800_TV_PAL && vsync_active) ? 495 : 413;
+	set_refresh_rate(h_total);
+}
+
+void N3DS_ToggleVsync(void) {
+	N3DS_SetVsync(!vsync_active);
+}
+
+bool N3DS_IsVsyncEnabled(void) {
+	return vsync_active;
+}
+
+static void apt_hook_cb(APT_HookType hookType, void *param) {
+	if (hookType == APTHOOK_ONSUSPEND || hookType == APTHOOK_ONEXIT) {
+		restore_refresh_rate();
+	} else if (hookType == APTHOOK_ONRESTORE || hookType == APTHOOK_ONWAKEUP) {
+		N3DS_SetVsync(vsync_active); // changes refresh rate
+	}
+}
+
+//
 
 void N3DS_VIDEO_PaletteUpdate()
 {
@@ -87,6 +125,8 @@ void N3DS_InitVideo(void)
 	gfxSet3D(false);
 	C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
 
+	aptHook(&apt_cookie, apt_hook_cb, NULL);
+
 	target_top = C3D_RenderTargetCreate(240, 400, GPU_RB_RGB8, GPU_RB_DEPTH16);
 	target_bottom = C3D_RenderTargetCreate(240, 320, GPU_RB_RGB8, GPU_RB_DEPTH16);
 	C3D_RenderTargetClear(target_top, C3D_CLEAR_ALL, 0, 0);
@@ -116,6 +156,8 @@ void N3DS_InitVideo(void)
 	C3D_TexEnvFunc(texEnv, C3D_Both, GPU_MODULATE);
 
 	C3D_DepthTest(true, GPU_GEQUAL, GPU_WRITE_ALL);
+
+	N3DS_SetVsync(vsync_active);
 }
 
 void N3DS_ExitVideo(void)
@@ -127,6 +169,9 @@ void N3DS_ExitVideo(void)
 
 	C3D_RenderTargetDelete(target_top);
 	C3D_RenderTargetDelete(target_bottom);
+
+	aptUnhook(&apt_cookie);
+	restore_refresh_rate();
 
 	C3D_Fini();
 	gfxExit();
@@ -165,6 +210,7 @@ void PLATFORM_SetVideoMode(VIDEOMODE_resolution_t const *res, int windowed, VIDE
 
 	C3D_RenderTargetClear(target_top, C3D_CLEAR_ALL, 0, 0);
 
+	N3DS_SetVsync(vsync_active); // changes refresh rate
 	PLATFORM_PaletteUpdate();
 	PLATFORM_DisplayScreen();
 }
@@ -300,17 +346,4 @@ void PLATFORM_DisplayScreen(void)
 	C3D_FrameEnd(0);
 
 	vsync_counter = C3D_FrameCounter(0);
-}
-
-void N3DS_SetVsync(bool value) {
-	vsync_active = value;
-	vsync_counter = 0;
-}
-
-void N3DS_ToggleVsync(void) {
-	N3DS_SetVsync(!vsync_active);
-}
-
-bool N3DS_IsVsyncEnabled(void) {
-	return vsync_active;
 }

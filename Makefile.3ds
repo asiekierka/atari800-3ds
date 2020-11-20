@@ -34,7 +34,8 @@ INCLUDES	:=	src
 ROMFS		:=	src/3ds/romfs
 
 APP_TITLE=atari800
-APP_DESCRIPTION=\"Atari 8-bit computer emulator (0.3.4)\"
+APP_VERSION=0.3.5
+APP_DESCRIPTION=\"Atari 8-bit computer emulator ($(APP_VERSION))\"
 APP_AUTHOR=\"atari800 development team\"
 ICON = src/3ds/banner/atari800-icon.png
 

@@ -139,7 +139,7 @@ void N3DS_InitVideo(void)
 	C3D_TexInitVRAM(&tex, 512, 256, GPU_RGBA8);
 	texBuf = linearAlloc(512 * 256 * 4);
 
-	ctr_load_png(&kbd_display, "romfs:/kbd_display.png", TEXTURE_TARGET_VRAM);
+	ctr_load_t3x(&kbd_display, "romfs:/kbd_display.t3x", TEXTURE_TARGET_VRAM);
 
 	ctr_init_shader(&shader, shader_shbin, shader_shbin_size);
 	AttrInfo_AddLoader(&(shader.attr), 0, GPU_FLOAT, 3); // v0 = position
@@ -250,9 +250,9 @@ int PLATFORM_WindowMaximised(void)
 void N3DS_DrawTexture(C3D_Tex* tex, int x, int y, int tx, int ty, int width, int height) {
 	float txmin, tymin, txmax, tymax;
 	txmin = (float) tx / tex->width;
-	tymax = (float) ty / tex->height;
+	tymax = 1.0f - (float) ty / tex->height;
 	txmax = (float) (tx+width) / tex->width;
-	tymin = (float) (ty+height) / tex->height;
+	tymin = 1.0f - (float) (ty+height) / tex->height;
 
 	C3D_TexBind(0, tex);
 	C3D_ImmDrawBegin(GPU_TRIANGLE_STRIP);

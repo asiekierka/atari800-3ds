@@ -18,7 +18,7 @@ struct ctr_shader_data
   C3D_AttrInfo attr;
 };
 
-bool ctr_load_png(C3D_Tex* tex, const char *name, texture_location loc);
+bool ctr_load_t3x(C3D_Tex* tex, const char *name, texture_location loc);
 
 void ctr_init_shader(struct ctr_shader_data *shader, const void* data, int size);
 void ctr_bind_shader(struct ctr_shader_data *shader);

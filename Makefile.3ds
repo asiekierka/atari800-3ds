@@ -114,6 +114,9 @@ SOURCES = \
 SHADERS = \
 	src/3ds/shader.v.pica
 
+GRAPHICS = \
+	src/3ds/romfs/kbd_display.t3x
+
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
@@ -155,11 +158,10 @@ export DEPSDIR	:=
 
 CFILES		:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir))
 PICAFILES	:=	$(foreach dir,$(SHADERS),$(CURDIR)/$(dir))
-PNGFILES	:=	$(foreach dir,$(GRAPHICS),$(CURDIR)/$(dir))
+TEXFILES	:=	$(foreach dir,$(GRAPHICS),$(CURDIR)/$(dir))
 
 export LD	:=	$(CC)
 export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
-			$(PNGFILES:.png=.bin.o) \
 			$(PICAFILES:.v.pica=.shbin.o) $(SHLISTFILES:.shlist=.shbin.o) \
 			$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
 
@@ -222,21 +224,14 @@ else
 $(OUTPUT).3dsx	:	$(OUTPUT).elf
 endif
 
-$(OUTPUT).elf	:	$(OFILES)
+$(OUTPUT).elf	:	$(OFILES) \
+			$(TEXFILES)
 
 #---------------------------------------------------------------------------------
-# you need a rule like this for each extension you use as binary data
-#---------------------------------------------------------------------------------
-%.bin.o	:	%.bin
+%.t3x : ../%.t3s
 #---------------------------------------------------------------------------------
 	@echo $(notdir $<)
-	@$(bin2o)
-
-#---------------------------------------------------------------------------------
-%.bin: %.png
-#---------------------------------------------------------------------------------
-	@echo $(notdir $<)
-	@convert $< rgba:$@
+	@tex3ds -i $< -o $@
 
 #---------------------------------------------------------------------------------
 # rules for assembling GPU shaders

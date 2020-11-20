@@ -53,16 +53,24 @@ static int ctable[256];
 
 static bool vsync_active = true;
 static u32 vsync_counter;
+static bool old_h_total_stored = false;
+static u32 old_h_total;
 
 static aptHookCookie apt_cookie;
 
 static void set_refresh_rate(u32 h_total) {
+	if (!old_h_total_stored) {
+		gspWaitForVBlank();
+		GSPGPU_ReadHWRegs(0x400424, &old_h_total, 4);
+		old_h_total_stored = true;
+	}
 	GSPGPU_WriteHWRegs(0x400424, &h_total, 4);
 }
 
 static void restore_refresh_rate(void) {
-	// restore refresh rate
-	set_refresh_rate(413);
+	if (old_h_total_stored) {
+		set_refresh_rate(old_h_total);
+	}
 }
 
 void N3DS_SetVsync(bool value) {
@@ -91,16 +99,6 @@ static void apt_hook_cb(APT_HookType hookType, void *param) {
 }
 
 //
-
-void N3DS_VIDEO_PaletteUpdate()
-{
-	int i;
-
-	for (i = 0; i < 256; i++)
-	{
-		ctable[i] = Colours_table[i] << 8 | 0xFF;
-	}
-}
 
 static void N3DS_RenderNormal(u8 *src, u32 *dest)
 {
@@ -183,7 +181,7 @@ void PLATFORM_PaletteUpdate(void)
 	if (N3DS_VIDEO_mode == VIDEOMODE_MODE_NORMAL && ARTIFACT_mode == ARTIFACT_PAL_BLEND)
 		PAL_BLENDING_UpdateLookup();
 #endif
-	N3DS_VIDEO_PaletteUpdate();
+	PLATFORM_MapRGB(ctable, Colours_table, 256);
 }
 
 void PLATFORM_GetPixelFormat(PLATFORM_pixel_format_t *format)
@@ -198,7 +196,7 @@ void PLATFORM_MapRGB(void *dest, int const *palette, int size)
 {
 	int i;
 	u32* target = (u32*) dest;
-	for (i = 0; i < 256; i++)
+	for (i = 0; i < size; i++)
 	{
 		target[i] = (palette[i] << 8) | 0xFF;
 	}

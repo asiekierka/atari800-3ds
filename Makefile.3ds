@@ -50,8 +50,6 @@ ICON = src/3ds/banner/atari800-icon.png
 #	src/atari_ntsc/atari_ntsc.c \
 #	src/filter_ntsc.c \
 
-GRAPHICS =
-
 SOURCES = \
 	src/afile.c \
 	src/antic.c \
@@ -159,13 +157,12 @@ export DEPSDIR	:=
 
 CFILES		:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir))
 PICAFILES	:=	$(foreach dir,$(SHADERS),$(CURDIR)/$(dir))
-TEXFILES	:=	$(foreach dir,$(GRAPHICS),$(CURDIR)/$(dir))
 
 export LD	:=	$(CC)
 export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
 			$(PICAFILES:.v.pica=.shbin.o) $(SHLISTFILES:.shlist=.shbin.o) \
 			$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
-
+export TEXFILES	:=	$(foreach dir,$(GRAPHICS),$(CURDIR)/$(dir))
 
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 			$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
@@ -220,13 +217,12 @@ DEPENDS	:=	$(OFILES:.o=.d)
 # main targets
 #---------------------------------------------------------------------------------
 ifeq ($(strip $(NO_SMDH)),)
-$(OUTPUT).3dsx	:	$(OUTPUT).elf $(OUTPUT).smdh
+$(OUTPUT).3dsx	:	$(OUTPUT).elf $(OUTPUT).smdh $(TEXFILES)
 else
-$(OUTPUT).3dsx	:	$(OUTPUT).elf
+$(OUTPUT).3dsx	:	$(OUTPUT).elf $(TEXFILES)
 endif
 
-$(OUTPUT).elf	:	$(OFILES) \
-			$(TEXFILES)
+$(OUTPUT).elf	:	$(OFILES)
 
 #---------------------------------------------------------------------------------
 %.t3x : ../%.t3s

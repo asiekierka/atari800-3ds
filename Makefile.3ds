@@ -34,7 +34,7 @@ INCLUDES	:=	src
 ROMFS		:=	src/3ds/romfs
 
 APP_TITLE=atari800
-APP_VERSION=0.3.5
+APP_VERSION=0.3.6
 APP_DESCRIPTION=\"Atari 8-bit computer emulator ($(APP_VERSION))\"
 APP_AUTHOR=\"atari800 development team\"
 ICON = src/3ds/banner/atari800-icon.png
@@ -70,6 +70,7 @@ SOURCES = \
 	src/cycle_map.c \
 	src/devices.c \
 	src/esc.c \
+	src/file_export.c \
 	src/gtia.c \
 	src/ide.c \
 	src/img_tape.c \
@@ -89,7 +90,6 @@ SOURCES = \
 	src/rtime.c \
 	src/screen.c \
 	src/sio.c \
-	src/sndsave.c \
 	src/sound.c \
 	src/statesav.c \
 	src/sysrom.c \
@@ -100,6 +100,19 @@ SOURCES = \
 	src/voicebox.c \
 	src/votrax.c \
 	src/votraxsnd.c \
+	src/codecs/audio.c \
+	src/codecs/audio_adpcm.c \
+	src/codecs/audio_mulaw.c \
+	src/codecs/audio_pcm.c \
+	src/codecs/container.c \
+	src/codecs/container_avi.c \
+	src/codecs/container_wav.c \
+	src/codecs/image.c \
+	src/codecs/image_pcx.c \
+	src/codecs/image_png.c \
+	src/codecs/video.c \
+	src/codecs/video_mpng.c \
+	src/codecs/video_mrle.c \
 	src/roms/altirra_5200_os.c \
 	src/roms/altirra_basic.c \
 	src/roms/altirraos_800.c \
@@ -125,7 +138,7 @@ CFLAGS	:=	-g -Wall -O2 -mword-relocations -D_GNU_SOURCE \
 			-fomit-frame-pointer -ffunction-sections \
 			$(ARCH)
 
-CFLAGS	+=	$(INCLUDE) -DARM11 -D_3DS
+CFLAGS	+=	$(INCLUDE) -DARM11 -D__3DS__
 
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
 

@@ -48,7 +48,7 @@
 #include <zlib.h>
 #endif
 
-#if defined(_3DS)
+#if defined(__3DS__)
 extern int Atari_POT(int);
 #else
 #define Atari_POT(x) 228
@@ -637,7 +637,7 @@ void INPUT_Frame(void)
 	}
 	else {
 		for (i = 0; i < 4; i++) {
-#if defined(DREAMCAST) || defined(_3DS)
+#if defined(DREAMCAST) || defined(__3DS__)
 			/* first get analog js data */
 			POKEY_POT_input[2 * i] = Atari_POT(2 * i);         /* x */
 			POKEY_POT_input[2 * i + 1] = Atari_POT(2 * i + 1); /* y */

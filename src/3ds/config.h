@@ -387,6 +387,8 @@
 /* Target: X11 with Motif. */
 /* #undef MOTIF */
 
+#define MULTIMEDIA 1
+
 /* Define to allow color changes inside a scanline. */
 #define NEW_CYCLE_EXACT 1
 
@@ -403,7 +405,7 @@
 #define PACKAGE_NAME "Atari800"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Atari800 git (2020-08-17)"
+#define PACKAGE_STRING "Atari800 git (2022-04-24)"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "atari800"
@@ -412,7 +414,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "3DS 0.3.5"
+#define PACKAGE_VERSION "3DS 0.3.6"
 
 /* Define to use page-based attribute array. */
 #define PAGED_ATTRIB 1
@@ -539,6 +541,9 @@
 
 /* Define to use very slow computer support (faster -refresh). */
 /* #undef VERY_SLOW */
+
+// TODO: Remove once master fixes disabling this
+#define VIDEO_RECORDING 1
 
 /* Define to emulate the Alien Group Voice Box. */
 #define VOICEBOX 1

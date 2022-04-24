@@ -117,7 +117,7 @@ typedef struct
 #define UI_ITEM_CHECKED 0x10  /* The boolean value for UI_ITEM_CHECK is true */
 #define UI_ITEM_TIP     0x20  /* suffix is shown when the item is selected rather than on its right */
 
-#if defined(_WIN32_WCE) || defined(DREAMCAST) || defined(_3DS)
+#if defined(_WIN32_WCE) || defined(DREAMCAST) || defined(__3DS__)
 /* No function keys nor Alt+letter on Windows CE, Sega DC, 3DS */
 #define UI_MENU_ACCEL(keystroke) NULL
 #else

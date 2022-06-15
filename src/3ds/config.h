@@ -414,7 +414,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "3DS 0.3.6"
+#define PACKAGE_VERSION "3DS 0.3.7"
 
 /* Define to use page-based attribute array. */
 #define PAGED_ATTRIB 1

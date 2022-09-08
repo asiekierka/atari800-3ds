@@ -74,6 +74,7 @@
 
 #include "config.h"
 #define _POSIX_C_SOURCE 200112L  /* for snprintf() in stdio.h on Linux */
+#include "platform.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -747,6 +748,8 @@ static void open_connection(char * address, int port)
 #endif /* HAVE_WINDOWS_H */
   if((address != NULL) && (strlen(address) > 0))
   {
+    PLATFORM_InitNetwork();
+
     close(rdev_fd);
     close(sock);
     do_once = 1;

@@ -24,7 +24,9 @@
 
 #include <3ds.h>
 #include <citro3d.h>
+#include <malloc.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 /* Atari800 includes */
@@ -43,8 +45,23 @@
 #include "videomode.h"
 
 static bool PLATFORM_IsNew3DS;
+static u32 PLATFORM_NetworkInitialized = 0;
+static u32 *PLATFORM_SocketBuffer;
 
 extern int dpad_as_keyboard;
+
+void PLATFORM_InitNetwork(void)
+{
+	if (PLATFORM_NetworkInitialized == 0) {
+		PLATFORM_SocketBuffer = (u32*) memalign(0x1000, 0x80000);
+		PLATFORM_NetworkInitialized = 1;
+		if (PLATFORM_SocketBuffer != NULL) {
+			if (socInit(PLATFORM_SocketBuffer, 0x80000) == 0) {
+				PLATFORM_NetworkInitialized = 2;
+			}
+		}
+	}
+}
 
 int PLATFORM_Configure(char *option, char *parameters)
 {
@@ -92,6 +109,11 @@ int PLATFORM_Exit(int run_monitor)
 	if (run_monitor) {
 		return 1;
 	} else {
+		if (PLATFORM_NetworkInitialized >= 2) {
+			socExit();
+			free(PLATFORM_SocketBuffer);
+		}
+
 		N3DS_ExitVideo();
 
 		romfsExit();

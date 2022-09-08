@@ -109,8 +109,10 @@ int PLATFORM_Exit(int run_monitor)
 	if (run_monitor) {
 		return 1;
 	} else {
-		if (PLATFORM_NetworkInitialized >= 2) {
-			socExit();
+		if (PLATFORM_NetworkInitialized >= 1) {
+			if (PLATFORM_NetworkInitialized >= 2) {
+				socExit();
+			}
 			free(PLATFORM_SocketBuffer);
 		}
 

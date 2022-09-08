@@ -34,7 +34,7 @@ INCLUDES	:=	src
 ROMFS		:=	src/3ds/romfs
 
 APP_TITLE=atari800
-APP_VERSION=0.3.7
+APP_VERSION=0.3.8
 APP_DESCRIPTION=\"Atari 8-bit computer emulator ($(APP_VERSION))\"
 APP_AUTHOR=\"atari800 development team\"
 ICON = src/3ds/banner/atari800-icon.png
@@ -218,7 +218,8 @@ $(BUILD):
 clean:
 	@echo clean ...
 	@rm -fr $(BUILD) $(TARGET).3dsx $(OUTPUT).smdh $(TARGET).elf
-	@rm -fr src/*.d src/*.o src/3ds/*.d src/3ds/*.o
+	@rm -fr src/*.d src/*.o src/3ds/*.d src/3ds/*.o src/codecs/*.d src/codecs/*.o
+	@rm -fr src/roms/*.d src/roms/*.o
 
 
 #---------------------------------------------------------------------------------

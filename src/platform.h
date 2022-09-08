@@ -13,6 +13,8 @@
 
 /* This include file defines prototypes for platform-specific functions. */
 
+void PLATFORM_InitNetwork(void);
+
 int PLATFORM_Initialise(int *argc, char *argv[]);
 int PLATFORM_Exit(int run_monitor);
 int PLATFORM_Keyboard(void);

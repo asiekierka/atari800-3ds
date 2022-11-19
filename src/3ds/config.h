@@ -10,6 +10,8 @@
 /* Target: Android */
 /* #undef ANDROID */
 
+/* #undef AUDIO_RECORDING */
+
 /* Target: standard I/O. */
 /* #undef BASIC */
 
@@ -387,7 +389,7 @@
 /* Target: X11 with Motif. */
 /* #undef MOTIF */
 
-#define MULTIMEDIA 1
+/* #undef MULTIMEDIA */
 
 /* Define to allow color changes inside a scanline. */
 #define NEW_CYCLE_EXACT 1
@@ -542,8 +544,7 @@
 /* Define to use very slow computer support (faster -refresh). */
 /* #undef VERY_SLOW */
 
-// TODO: Remove once master fixes disabling this
-#define VIDEO_RECORDING 1
+/* #undef VIDEO_RECORDING */
 
 /* Define to emulate the Alien Group Voice Box. */
 #define VOICEBOX 1

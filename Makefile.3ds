@@ -48,6 +48,16 @@ ICON = src/3ds/banner/atari800-icon.png
 #	src/xep80.c \
 #	src/xep80_fonts.c \
 #	src/atari_ntsc/atari_ntsc.c \
+#	src/codecs/audio.c \
+#	src/codecs/audio_adpcm.c \
+#	src/codecs/audio_mulaw.c \
+#	src/codecs/audio_pcm.c \
+#	src/codecs/container.c \
+#	src/codecs/container_avi.c \
+#	src/codecs/container_wav.c \
+#	src/codecs/video.c \
+#	src/codecs/video_mpng.c \
+#	src/codecs/video_mrle.c \
 #	src/filter_ntsc.c \
 
 SOURCES = \
@@ -100,19 +110,9 @@ SOURCES = \
 	src/voicebox.c \
 	src/votrax.c \
 	src/votraxsnd.c \
-	src/codecs/audio.c \
-	src/codecs/audio_adpcm.c \
-	src/codecs/audio_mulaw.c \
-	src/codecs/audio_pcm.c \
-	src/codecs/container.c \
-	src/codecs/container_avi.c \
-	src/codecs/container_wav.c \
 	src/codecs/image.c \
 	src/codecs/image_pcx.c \
 	src/codecs/image_png.c \
-	src/codecs/video.c \
-	src/codecs/video_mpng.c \
-	src/codecs/video_mrle.c \
 	src/roms/altirra_5200_os.c \
 	src/roms/altirra_basic.c \
 	src/roms/altirraos_800.c \

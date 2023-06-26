@@ -114,6 +114,7 @@ SOURCES = \
 	src/codecs/image_pcx.c \
 	src/codecs/image_png.c \
 	src/roms/altirra_5200_os.c \
+	src/roms/altirra_5200_charset.c \
 	src/roms/altirra_basic.c \
 	src/roms/altirraos_800.c \
 	src/roms/altirraos_xl.c \

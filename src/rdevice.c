@@ -1209,7 +1209,7 @@ void RDevice_STAT(void)
   int len;
 #else
 #ifdef R_NETWORK
-  unsigned int len;
+  socklen_t len;
 #endif
 #endif
   int bytesread;

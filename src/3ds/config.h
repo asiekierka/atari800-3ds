@@ -460,6 +460,8 @@
 /* Define to use the host serial port with the R: device. */
 /* #undef R_SERIAL */
 
+#define SCREENSHOTS 1
+
 /* Target: SDL library. */
 /* #undef SDL */
 

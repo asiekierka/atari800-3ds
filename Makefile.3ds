@@ -41,6 +41,7 @@ ICON = src/3ds/banner/atari800-icon.png
 
 #	src/af80.c \
 #	src/bit3.c \
+#	src/netsio.c \
 #	src/pbi_proto80.c \
 #	src/pbi_bb.c \
 #	src/pbi_mio.c \
@@ -61,6 +62,7 @@ ICON = src/3ds/banner/atari800-icon.png
 #	src/filter_ntsc.c \
 
 SOURCES = \
+	src/acidtest.c \
 	src/afile.c \
 	src/antic.c \
 	src/artifact.c \

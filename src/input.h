@@ -90,7 +90,7 @@ int INPUT_Playingback(void);
 void INPUT_RecordInt(int i);
 int INPUT_PlaybackInt(void);
 
-#ifdef DREAMCAST
+#if defined(DREAMCAST) || defined(SDL2) || defined(__3DS__)
 extern int Atari_POT(int);
 #elif SDL2
 extern int Atari_POT(int);

@@ -10,6 +10,8 @@
 /* Target: Android */
 /* #undef ANDROID */
 
+/* #undef AUDIO_CODEC_MP3 */
+
 /* #undef AUDIO_RECORDING */
 
 /* Target: standard I/O. */
@@ -43,9 +45,6 @@
 
 /* Alternate config filename due to 8+3 fs limit. */
 #define DEFAULT_CFG_NAME "/3ds/atari800/atari800.cfg"
-
-/* Target: Windows with DirectX. */
-/* #undef DIRECTX */
 
 /* Define to use dirty screen partial repaints. */
 /* #undef DIRTYRECT */
@@ -148,6 +147,9 @@
 /* Define to 1 if you have the `png' library (-lpng). */
 #define HAVE_LIBPNG 1
 
+/* Define to 1 if you have the 'pthread' library (-lpthread). */
+/* #undef HAVE_LIBPTHREAD */
+
 /* Define to 1 if you have the `z' library (-lz). */
 #define HAVE_LIBZ 1
 
@@ -156,9 +158,6 @@
 
 /* Define to 1 if you have the `memmove' function. */
 #define HAVE_MEMMOVE 1
-
-/* Define to 1 if you have the <memory.h> header file. */
-#define HAVE_MEMORY_H 1
 
 /* Define to 1 if you have the `memset' function. */
 #define HAVE_MEMSET 1
@@ -208,6 +207,9 @@
 /* Define to 1 if you have the `select' function. */
 #define HAVE_SELECT 1
 
+/* Define to 1 if you have the 'setjmp' function. */
+/* #undef HAVE_SETJMP */
+
 /* Define to 1 if you have the `signal' function. */
 /* #undef HAVE_SIGNAL */
 
@@ -229,6 +231,9 @@
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #define HAVE_STDINT_H 1
+
+/* Define to 1 if you have the <stdio.h> header file. */
+#define HAVE_STDIO_H 1
 
 /* Define to 1 if you have the <stdlib.h> header file. */
 #define HAVE_STDLIB_H 1
@@ -391,11 +396,17 @@
 
 /* #undef MULTIMEDIA */
 
+/* Define to enable NetSIO (FujiNet) support */
+/* #undef NETSIO */
+
 /* Define to allow color changes inside a scanline. */
 #define NEW_CYCLE_EXACT 1
 
 /* Define to use nonlinear POKEY mixing. */
 #define NONLINEAR_MIXING 1
+
+/* Define to 1 if your C compiler doesn't accept -c and -o together. */
+/* #undef NO_MINUS_C_MINUS_O */
 
 /* Use NTSC video filter. */
 /* #undef NTSC_FILTER */
@@ -407,7 +418,7 @@
 #define PACKAGE_NAME "Atari800"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Atari800 git (2024-01-20)"
+#define PACKAGE_STRING "Atari800 7.1.2"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "atari800"
@@ -416,7 +427,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "3DS 0.3.10"
+#define PACKAGE_VERSION "3DS 0.4.0"
 
 /* Define to use page-based attribute array. */
 #define PAGED_ATTRIB 1
@@ -439,23 +450,23 @@
 /* Platform-specific mapping of RGB palette to display surface. */
 #define PLATFORM_MAP_PALETTE 1
 
+/* Define to add Pokey registers recording. */
+/* #undef POKEYREC */
+
 /* Use 8-bit signed samples. */
 /* #undef POKEYSND_SIGNED_SAMPLES */
 
 /* Target: Sony PlayStation 2. */
 /* #undef PS2 */
 
-/* Define as the return type of signal handlers (`int' or `void'). */
-#define RETSIGTYPE void
-
 /* Target: Raspberry Pi. */
 /* #undef RPI */
 
 /* Define to use R: device. */
-#define R_IO_DEVICE
+#define R_IO_DEVICE 1
 
 /* Define to use IP network connection with the R: device. */
-#define R_NETWORK
+#define R_NETWORK 1
 
 /* Define to use the host serial port with the R: device. */
 /* #undef R_SERIAL */
@@ -465,6 +476,9 @@
 /* Target: SDL library. */
 /* #undef SDL */
 
+/* Target: SDL2 library. */
+/* #undef SDL2 */
+
 /* Define to the type of arg 1 for `select'. */
 #define SELECT_TYPE_ARG1 int
 
@@ -473,9 +487,6 @@
 
 /* Define to the type of arg 5 for `select'. */
 #define SELECT_TYPE_ARG5 (struct timeval *)
-
-/* Define to allow serial in/out sound. */
-/* #undef SERIO_SOUND */
 
 /* Target: X11 with shared memory extensions. */
 /* #undef SHM */
@@ -534,25 +545,127 @@
 /* Target: Curses-compatible library. */
 /* #undef USE_CURSES */
 
-/* Define for using cursor/ctrl keys for keyboard joystick. */
-/* #undef USE_CURSORBLOCK */
-
 /* Target: Ncurses library. */
 /* #undef USE_NCURSES */
+
+/* Enable extensions on AIX, Interix, z/OS.  */
+#ifndef _ALL_SOURCE
+# define _ALL_SOURCE 1
+#endif
+/* Enable extensions on Cosmopolitan Libc. */
+#ifndef _COSMO_SOURCE
+# define _COSMO_SOURCE 1
+#endif
+/* Enable general extensions on macOS.  */
+#ifndef _DARWIN_C_SOURCE
+# define _DARWIN_C_SOURCE 1
+#endif
+/* Enable general extensions on Solaris.  */
+#ifndef __EXTENSIONS__
+# define __EXTENSIONS__ 1
+#endif
+/* Enable GNU extensions on systems that have them.  */
+#ifndef _GNU_SOURCE
+# define _GNU_SOURCE 1
+#endif
+/* Enable X/Open compliant socket functions that do not require linking
+   with -lxnet on HP-UX 11.11.  */
+#ifndef _HPUX_ALT_XOPEN_SOCKET_API
+# define _HPUX_ALT_XOPEN_SOCKET_API 1
+#endif
+/* Identify the host operating system as Minix.
+   This macro does not affect the system headers' behavior.
+   A future release of Autoconf may stop defining this macro.  */
+#ifndef _MINIX
+/* # undef _MINIX */
+#endif
+/* Enable general extensions on NetBSD.
+   Enable NetBSD compatibility extensions on Minix.  */
+#ifndef _NETBSD_SOURCE
+# define _NETBSD_SOURCE 1
+#endif
+/* Enable OpenBSD compatibility extensions on NetBSD.
+   Oddly enough, this does nothing on OpenBSD.  */
+#ifndef _OPENBSD_SOURCE
+# define _OPENBSD_SOURCE 1
+#endif
+/* Define to 1 if needed for POSIX-compatible behavior.  */
+#ifndef _POSIX_SOURCE
+/* # undef _POSIX_SOURCE */
+#endif
+/* Define to 2 if needed for POSIX-compatible behavior.  */
+#ifndef _POSIX_1_SOURCE
+/* # undef _POSIX_1_SOURCE */
+#endif
+/* Enable POSIX-compatible threading on Solaris.  */
+#ifndef _POSIX_PTHREAD_SEMANTICS
+# define _POSIX_PTHREAD_SEMANTICS 1
+#endif
+/* Enable extensions specified by ISO/IEC TS 18661-5:2014.  */
+#ifndef __STDC_WANT_IEC_60559_ATTRIBS_EXT__
+# define __STDC_WANT_IEC_60559_ATTRIBS_EXT__ 1
+#endif
+/* Enable extensions specified by ISO/IEC TS 18661-1:2014.  */
+#ifndef __STDC_WANT_IEC_60559_BFP_EXT__
+# define __STDC_WANT_IEC_60559_BFP_EXT__ 1
+#endif
+/* Enable extensions specified by ISO/IEC TS 18661-2:2015.  */
+#ifndef __STDC_WANT_IEC_60559_DFP_EXT__
+# define __STDC_WANT_IEC_60559_DFP_EXT__ 1
+#endif
+/* Enable extensions specified by C23 Annex F.  */
+#ifndef __STDC_WANT_IEC_60559_EXT__
+# define __STDC_WANT_IEC_60559_EXT__ 1
+#endif
+/* Enable extensions specified by ISO/IEC TS 18661-4:2015.  */
+#ifndef __STDC_WANT_IEC_60559_FUNCS_EXT__
+# define __STDC_WANT_IEC_60559_FUNCS_EXT__ 1
+#endif
+/* Enable extensions specified by C23 Annex H and ISO/IEC TS 18661-3:2015.  */
+#ifndef __STDC_WANT_IEC_60559_TYPES_EXT__
+# define __STDC_WANT_IEC_60559_TYPES_EXT__ 1
+#endif
+/* Enable extensions specified by ISO/IEC TR 24731-2:2010.  */
+#ifndef __STDC_WANT_LIB_EXT2__
+# define __STDC_WANT_LIB_EXT2__ 1
+#endif
+/* Enable extensions specified by ISO/IEC 24747:2009.  */
+#ifndef __STDC_WANT_MATH_SPEC_FUNCS__
+# define __STDC_WANT_MATH_SPEC_FUNCS__ 1
+#endif
+/* Enable extensions on HP NonStop.  */
+#ifndef _TANDEM_SOURCE
+# define _TANDEM_SOURCE 1
+#endif
+/* Enable X/Open extensions.  Define to 500 only if necessary
+   to make mbstate_t available.  */
+#ifndef _XOPEN_SOURCE
+/* # undef _XOPEN_SOURCE */
+#endif
 
 /* Define to enable on-screen keyboard. */
 /* #undef USE_UI_BASIC_ONSCREEN_KEYBOARD */
 
+/* Version number of package */
+#define VERSION "7.1.2"
+
+/* Define for targets that require acceleration to run properly */
+/* #undef VIDEO_ACCEL_ON_BY_DEFAULT */
+
+/* Define to enable support for PNG video codec. */
+/* #undef VIDEO_CODEC_PNG */
+
+/* Define to enable support for ZMBV video codec. */
+/* #undef VIDEO_CODEC_ZMBV */
+
+/* Define to enable support for AVI video/audio recording. */
+/* #undef VIDEO_RECORDING */
+
 /* Define to use very slow computer support (faster -refresh). */
 /* #undef VERY_SLOW */
 
-/* #undef VIDEO_RECORDING */
-
 /* Define to emulate the Alien Group Voice Box. */
 #define VOICEBOX 1
-
-/* Define to allow volume only sound. */
-/* #undef VOL_ONLY_SOUND */
 
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */
@@ -578,6 +691,12 @@
 
 /* Define for large files, on AIX-style hosts. */
 /* #undef _LARGE_FILES */
+
+/* Number of bits in time_t, on hosts where this is settable. */
+/* #undef _TIME_BITS */
+
+/* Define to 1 on platforms where this makes time_t a 64-bit type. */
+/* #undef __MINGW_USE_VC2005_COMPAT */
 
 /* Define to empty if `const' does not conform to ANSI C. */
 /* #undef const */

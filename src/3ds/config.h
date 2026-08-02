@@ -418,7 +418,7 @@
 #define PACKAGE_NAME "Atari800"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Atari800 7.1.2"
+#define PACKAGE_STRING "Atari800 7.1.2-git (2026-08-02)"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "atari800"
@@ -427,7 +427,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "3DS 0.4.0"
+#define PACKAGE_VERSION "3DS 0.4.1"
 
 /* Define to use page-based attribute array. */
 #define PAGED_ATTRIB 1
@@ -647,7 +647,7 @@
 /* #undef USE_UI_BASIC_ONSCREEN_KEYBOARD */
 
 /* Version number of package */
-#define VERSION "7.1.2"
+#define VERSION "7.1.2-git (2026-08-02)"
 
 /* Define for targets that require acceleration to run properly */
 /* #undef VIDEO_ACCEL_ON_BY_DEFAULT */
